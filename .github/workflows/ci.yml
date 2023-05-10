@@ -24,7 +24,7 @@ env:
 jobs:
   test:
     name: Test
-    runs-on: [self-hosted, toolbox-runner-small]
+    runs-on: [self-hosted, toolbox-runner-big]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -61,7 +61,7 @@ jobs:
   release:
     name: Build Push Release
     if: startsWith( github.ref, 'refs/tags/' )
-    runs-on: [self-hosted, toolbox-runner-small]
+    runs-on: [self-hosted, toolbox-runner-big]
     needs: test
     steps:
       - name: Checkout
