@@ -85,43 +85,43 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Get the version
-        id: get_version
+        id: get-version
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          echo "testing: $VERSION $TAG_NAME"
+          echo "Building version $VERSION and tag $TAG_NAME"
           if [[ -z "${VERSION}" ]] || [[ -z "${TAG_NAME}" ]]; then
-            echo "invalid version: $VERSION and tag_name: $TAG_NAME"
+            echo "Invalid version or tag_name. version: $VERSION, tag_name: $TAG_NAME"
             exit 1
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
       - name: Create Release YAML (gatling-operator.yaml)
         env:
-          VERSION: ${{ steps.get-version.outputs.version }}
+          VERSION: ${{ steps.get-version.outputs.VERSION }}
         run: make manifests-release IMG=$REGISTRY/$IMAGE_NAME:$VERSION
       - name: Build and push operator image ${{ steps.get-version.outputs.VERSION }}
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get-version.outputs.version }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get-version.outputs.VERSION }}
           file: ./Dockerfile
           build-args: |
-            VERSION=${{ steps.get-version.outputs.version }}
+            VERSION=${{ steps.get-version.outputs.VERSION }}
           push: true
-      - name: Build and push gatling-runner ${{ steps.get-version.outputs.version }}
+      - name: Build and push gatling-runner ${{ steps.get-version.outputs.VERSION }}
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/gatling:${{ steps.get-version.outputs.version }}
+          tags: ${{ env.REGISTRY }}/gatling:${{ steps.get-version.outputs.VERSION }}
           file: ./gatling/Dockerfile
           build-args: |
-            VERSION=${{ steps.get-version.outputs.version }}
+            VERSION=${{ steps.get-version.outputs.VERSION }}
           push: true
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ steps.get_version.outputs.TAG_NAME }}
+          name: ${{ steps.get-version.outputs.TAG_NAME }}
           draft: false
           prerelease: false
           generate_release_notes: true
