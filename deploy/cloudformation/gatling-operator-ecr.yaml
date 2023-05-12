@@ -1,0 +1,84 @@
+Description: "Gatling-operator ECR Config"
+
+Conditions:
+  Preprod: !Equals [ !Ref "AWS::AccountId", "018471812555" ]
+
+Parameters:
+  ECRRegion:
+    Type: String
+    Default: eu-west-1
+    Description: The region where the ECR repositories will be created
+
+Resources:
+  GatlingOperatorECRRepository:
+    Type: 'AWS::ECR::Repository'
+    Properties:
+      RepositoryName: gatling-operator
+
+  GatlingECRRepository:
+    Type: 'AWS::ECR::Repository'
+    Properties:
+      RepositoryName: gatling
+
+  ECRUser:
+    Type: 'AWS::IAM::User'
+
+  ECRAccessKey:
+    Type: 'AWS::IAM::AccessKey'
+    Properties:
+      UserName: !Ref ECRUser
+
+  ECRSecret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: ECRSecret
+      SecretString: 
+        !Sub 
+          - '{ "AccessKeyId": "${AccessKeyId}", "SecretAccessKey": "${SecretAccessKey}" }'
+          - AccessKeyId: !Ref ECRAccessKey
+            SecretAccessKey: !GetAtt ECRAccessKey.SecretAccessKey
+
+  ECRPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: ECRUserPolicy
+      Users:
+        - !Ref ECRUser
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:BatchGetImage"
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:GetAuthorizationToken"
+            Resource: "*"
+          - Effect: Allow
+            Action:
+              - 'ecr:GetAuthorizationToken'
+              - 'ecr:BatchCheckLayerAvailability'
+              - 'ecr:GetDownloadUrlForLayer'
+              - 'ecr:BatchGetImage'
+              - 'ecr:InitiateLayerUpload'
+              - 'ecr:UploadLayerPart'
+              - 'ecr:CompleteLayerUpload'
+              - 'ecr:PutImage'
+            Resource:
+              - !Sub 
+                - "arn:aws:ecr:${Region}:${AWS::AccountId}:repository/gatling-operator"
+                - Region: !Ref ECRRegion
+              - !Sub 
+                - "arn:aws:ecr:${Region}:${AWS::AccountId}:repository/gatling"
+                - Region: !Ref ECRRegion
+
+Outputs:
+  GatlingOperatorECRRepository:
+    Description: "The ARN of the Gatling Operator ECR repository"
+    Value: !GetAtt GatlingOperatorECRRepository.Arn
+  GatlingECRRepository:
+    Description: "The ARN of the Gatling ECR repository"
+    Value: !GetAtt GatlingECRRepository.Arn
+  ECRSecretName:
+    Description: The name of the secret in Secrets Manager
+    Value: !Ref ECRSecret

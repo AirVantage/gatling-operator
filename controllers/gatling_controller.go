@@ -447,6 +447,8 @@ func (r *GatlingReconciler) newGatlingRunnerJobForCR(gatling *gatlingv1alpha1.Ga
 
 	var noRestarts int32 = 0
 
+	var noRestarts int32 = 0
+
 	envVars := gatling.Spec.TestScenarioSpec.Env
 	if gatling.Spec.GenerateReport {
 		gatlingTransferResultCommand := commands.GetGatlingTransferResultCommand(
@@ -464,8 +466,8 @@ func (r *GatlingReconciler) newGatlingRunnerJobForCR(gatling *gatlingv1alpha1.Ga
 			},
 			Spec: batchv1.JobSpec{
 				BackoffLimit: &noRestarts,
-				Parallelism: r.getGatlingRunnerJobParallelism(gatling),
-				Completions: r.getGatlingRunnerJobParallelism(gatling),
+				Parallelism:  r.getGatlingRunnerJobParallelism(gatling),
+				Completions:  r.getGatlingRunnerJobParallelism(gatling),
 				Template: corev1.PodTemplateSpec{
 					ObjectMeta: metav1.ObjectMeta{
 						Name:        r.getObjectMeta(gatling).Name,
@@ -531,8 +533,8 @@ func (r *GatlingReconciler) newGatlingRunnerJobForCR(gatling *gatlingv1alpha1.Ga
 		},
 		Spec: batchv1.JobSpec{
 			BackoffLimit: &noRestarts,
-			Parallelism: &gatling.Spec.TestScenarioSpec.Parallelism,
-			Completions: &gatling.Spec.TestScenarioSpec.Parallelism,
+			Parallelism:  &gatling.Spec.TestScenarioSpec.Parallelism,
+			Completions:  &gatling.Spec.TestScenarioSpec.Parallelism,
 			Template: corev1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Name:        r.getObjectMeta(gatling).Name,
