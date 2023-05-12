@@ -87,8 +87,15 @@ jobs:
       - name: Get the version
         id: get_version
         run: |
-          echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
-          echo ::set-output name=TAG_NAME::${GITHUB_REF#refs/tags/}
+          VERSION=${GITHUB_REF#refs/tags/v}
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          echo "testing: $VERSION $TAG_NAME"
+          if [[ -z "${VERSION}" ]] || [[ -z "${TAG_NAME}" ]]; then
+            echo "invalid version: $VERSION and tag_name: $TAG_NAME"
+            exit 1
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
       - name: Create Release YAML (gatling-operator.yaml)
         env:
           VERSION: ${{ steps.get-version.outputs.version }}
