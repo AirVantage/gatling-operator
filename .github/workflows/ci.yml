@@ -104,7 +104,6 @@ jobs:
         with:
           platforms: linux/amd64
           tags: ${{ env.REGISTRY }}/gatling-operator:${{ env.VERSION }}
-          file: ./Dockerfile
           build-args: |
             VERSION=${{ env.VERSION }}
           push: true
@@ -113,7 +112,7 @@ jobs:
         with:
           platforms: linux/amd64
           tags: ${{ env.REGISTRY }}/gatling:${{ env.VERSION }}
-          file: ./gatling/Dockerfile
+          context: gatling
           build-args: |
             VERSION=${{ env.VERSION }}
           push: true
