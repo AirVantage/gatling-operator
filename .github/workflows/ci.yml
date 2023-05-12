@@ -19,7 +19,6 @@ permissions:
 
 env:
   REGISTRY: 018471812555.dkr.ecr.eu-west-1.amazonaws.com
-  IMAGE_NAME: ${{ github.repository }}
   AWS_REGION: eu-west-1
 
 jobs:
@@ -99,12 +98,12 @@ jobs:
       - name: Create Release YAML (gatling-operator.yaml)
         env:
           VERSION: ${{ env.VERSION }}
-        run: make manifests-release IMG=$REGISTRY/$IMAGE_NAME:$VERSION
+        run: make manifests-release IMG=$REGISTRY/gatling-operator:$VERSION
       - name: Build and push operator image ${{ env.VERSION }}
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          tags: ${{ env.REGISTRY }}/gatling-operator:${{ env.VERSION }}
           file: ./Dockerfile
           build-args: |
             VERSION=${{ env.VERSION }}
