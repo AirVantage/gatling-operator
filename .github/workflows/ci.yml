@@ -98,30 +98,30 @@ jobs:
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
       - name: Create Release YAML (gatling-operator.yaml)
         env:
-          VERSION: ${{ steps.get-version.outputs.VERSION }}
+          VERSION: ${{ env.VERSION }}
         run: make manifests-release IMG=$REGISTRY/$IMAGE_NAME:$VERSION
-      - name: Build and push operator image ${{ steps.get-version.outputs.VERSION }}
+      - name: Build and push operator image ${{ env.VERSION }}
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get-version.outputs.VERSION }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           file: ./Dockerfile
           build-args: |
-            VERSION=${{ steps.get-version.outputs.VERSION }}
+            VERSION=${{ env.VERSION }}
           push: true
-      - name: Build and push gatling-runner ${{ steps.get-version.outputs.VERSION }}
+      - name: Build and push gatling-runner ${{ env.VERSION }}
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.REGISTRY }}/gatling:${{ steps.get-version.outputs.VERSION }}
+          tags: ${{ env.REGISTRY }}/gatling:${{ env.VERSION }}
           file: ./gatling/Dockerfile
           build-args: |
-            VERSION=${{ steps.get-version.outputs.VERSION }}
+            VERSION=${{ env.VERSION }}
           push: true
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          name: ${{ steps.get-version.outputs.TAG_NAME }}
+          name: ${{ env.TAG_NAME }}
           draft: false
           prerelease: false
           generate_release_notes: true
