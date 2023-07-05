@@ -1,8 +1,8 @@
 # Gatling Operator
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/st-tech/gatling-operator)](https://goreportcard.com/report/github.com/st-tech/gatling-operator) [![CI](https://github.com/st-tech/gatling-operator/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/st-tech/gatling-operator/actions/workflows/ci.yml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/st-tech/gatling-operator)
+[![Go Report Card](https://goreportcard.com/badge/github.com/airvantage/gatling-operator)](https://goreportcard.com/report/github.com/airvantage/gatling-operator) [![CI](https://github.com/airvantage/gatling-operator/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/airvantage/gatling-operator/actions/workflows/ci.yml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/airvantage/gatling-operator)
 
-[Gatling](https://gatling.io/) is an open source load testing tool that allows to analyze and measure the performance of a variety of services. [Gatling Operator](https://github.com/st-tech/gatling-operator) is a Kubernetes Operator for running automated distributed Gatling load testing.
+[Gatling](https://gatling.io/) is an open source load testing tool that allows to analyze and measure the performance of a variety of services. [Gatling Operator](https://github.com/airvantage/gatling-operator) is a Kubernetes Operator for running automated distributed Gatling load testing.
 
 ## How Gatling Operator works
 
@@ -36,9 +36,9 @@ The desired state of a distributed Gatling load testing is described through a K
 
 ## Requirements
 
-- Kubernetes: version >= 1.18
+- Kubernetes: version >= 1.20
 
-> note: the versions below 1.18 might work but are not tested
+> note: the versions below 1.20 might work but are not tested
 
 ## Quick Start
 
@@ -55,4 +55,4 @@ Please make a GitHub issue or pull request to help us build the operator.
 
 ## Changelog
 
-Please see the [list of releases](https://github.com/st-tech/gatling-operator/releases) for information on changes between releases.
+Please see the [list of releases](https://github.com/airvantage/gatling-operator/releases) for information on changes between releases.
