@@ -11,7 +11,7 @@ VERSION := latest
 CRD_OPTIONS ?= "crd:trivialVersions=true,preserveUnknownFields=false"
 KIND_CLUSTER_NAME ?= "gatling-cluster"
 K8S_NODE_IMAGE ?= v1.25.8
-KUSTOMIZE_VERSION ?= v5.1.1
+KUSTOMIZE_VERSION ?= v5.3.0
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
