@@ -1,6 +1,6 @@
 # Gatling Operator
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/airvantage/gatling-operator)](https://goreportcard.com/report/github.com/airvantage/gatling-operator) [![CI](https://github.com/airvantage/gatling-operator/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/airvantage/gatling-operator/actions/workflows/ci.yml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/airvantage/gatling-operator)
+[![Go Report Card](https://goreportcard.com/badge/github.com/st-tech/gatling-operator)](https://goreportcard.com/report/github.com/st-tech/gatling-operator) [![CI](https://github.com/st-tech/gatling-operator/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/st-tech/gatling-operator/actions/workflows/ci.yml)  [![daily vulnerability scan](https://github.com/st-tech/gatling-operator/actions/workflows/daily-vul-scan.yml/badge.svg?branch=main)](https://github.com/st-tech/gatling-operator/actions/workflows/daily-vul-scan.yml) ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/st-tech/gatling-operator)
 
 [Gatling](https://gatling.io/) is an open source load testing tool that allows to analyze and measure the performance of a variety of services. [Gatling Operator](https://github.com/airvantage/gatling-operator) is a Kubernetes Operator for running automated distributed Gatling load testing.
 
@@ -19,7 +19,7 @@ The desired state of a distributed Gatling load testing is described through a K
   - Horizontal scaling: number of pods running in parallel during a load testing can be configured
   - Vertical scaling: CPU and RAM resource allocation for Gatling runner Pod can be configured
 - Allows Gatling load testing to start running at a specific time
-  - By default, the Gatling load testing starts running as soon as the runner Pod's init container gets ready. By specifing the start time, the Gatling load testing waits to start running until the specified time
+  - By default, the Gatling load testing starts running as soon as the runner Pod's init container gets ready. By specifying the start time, the Gatling load testing waits to start running until the specified time
 - Gatling Pod attributions
   - Gatling runtime container image
   - [rclone](https://rclone.org/) container image
@@ -43,11 +43,13 @@ The desired state of a distributed Gatling load testing is described through a K
 ## Quick Start
 
 - [Quick Start Guide](docs/quickstart-guide.md)
+
 ## Documentations
 
 - [Architecture](docs/architecture.md)
 - [Gatling CRD Reference](docs/api.md)
 - [User Guide](docs/user-guide.md)
+- [How to build Gatling Operator](docs/build-guide.md)
 
 ## Contributing
 

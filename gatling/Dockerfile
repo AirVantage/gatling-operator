@@ -2,20 +2,17 @@
 # https://github.com/denvazh/gatling/tree/master/3.2.1
 #
 # Gatling is a highly capable load testing tool.
-#
-# Documentation: https://gatling.io/docs/3.2/
-# Cheat sheet: https://gatling.io/docs/3.2/cheat-sheet/
 
-FROM public.ecr.aws/docker/library/eclipse-temurin:8-jdk-jammy
+FROM openjdk:17-jdk-slim-bullseye
 
 # working directory for gatling
 WORKDIR /opt
 
 # gating version
-ENV GATLING_VERSION 3.2.1
-ENV APP_HOME  /opt/gatling
-ENV APP_USER  gatling
-ENV APP_GROUP appgroup
+ENV GATLING_VERSION 3.9.5
+
+# create directory for gatling install
+RUN mkdir -p gatling
 
 # install gatling
 RUN set -x && mkdir -p gatling && \
