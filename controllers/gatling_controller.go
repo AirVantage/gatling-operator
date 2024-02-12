@@ -447,8 +447,6 @@ func (r *GatlingReconciler) newGatlingRunnerJobForCR(gatling *gatlingv1alpha1.Ga
 
 	var noRestarts int32 = 0
 
-	var noRestarts int32 = 0
-
 	envVars := gatling.Spec.TestScenarioSpec.Env
 	if gatling.Spec.GenerateReport {
 		gatlingTransferResultCommand := commands.GetGatlingTransferResultCommand(

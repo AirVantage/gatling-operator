@@ -113,7 +113,7 @@ kubectl config use-context kind-gatling-cluster
     The commands runs Gatling Operator Controller Manager in your local environment. You can stop in ctrl+c.
 
     ```
-    ~/github/gatling-operator/bin/controller-gen "crd:trivialVersions=true,preserveUnknownFields=false" rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
+    ~/github/gatling-operator/bin/controller-gen crd rbac:roleName=manager-role webhook paths="./..." output:crd:artifacts:config=config/crd/bases
     ~/github/gatling-operator/bin/controller-gen object:headerFile="hack/boilerplate.go.txt" paths="./..."
     go fmt ./...
     api/v1alpha1/zz_generated.deepcopy.go

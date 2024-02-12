@@ -8,7 +8,7 @@ SAMPLE_IMG := gatling:$(IMAGE_TAG)
 # Release version
 VERSION := latest
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
-CRD_OPTIONS ?= "crd:trivialVersions=true,preserveUnknownFields=false"
+CRD_OPTIONS ?= "crd"
 KIND_CLUSTER_NAME ?= "gatling-cluster"
 K8S_NODE_IMAGE ?= v1.25.8
 KUSTOMIZE_VERSION ?= v5.3.0

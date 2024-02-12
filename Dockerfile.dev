@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
 ENV GO_VERSION 1.21.7
-ENV KUBECTL_VERSION v1.21.10
+ENV KUBECTL_VERSION v1.25.8
 
 # KEEP the value as arm64.
 # This environment variable is for arm64, but should be left as is for any architecture
