@@ -2,17 +2,31 @@
 # https://github.com/denvazh/gatling/tree/master/3.2.1
 #
 # Gatling is a highly capable load testing tool.
-#
-# Documentation: https://gatling.io/docs/3.2/
-# Cheat sheet: https://gatling.io/docs/3.2/cheat-sheet/
+FROM maven:3.9.6 AS dependency_stage
 
-FROM public.ecr.aws/docker/library/eclipse-temurin:8-jdk-jammy
+WORKDIR /tmp
+
+ARG MAVEN_REPO="https://repo.maven.apache.org/maven2/"
+ARG MAVEN_ARTIFACTS="\
+    com.github.javafaker:javafaker:1.0.2 \
+    com.github.mifmif:generex:1.0.2 \
+    org.apache.commons:commons-lang3:3.5 \
+    org.yaml:snakeyaml:1.23 \
+"
+
+# Fetch dependencies using Maven
+RUN for artifact in $MAVEN_ARTIFACTS; do \
+    mvn dependency:copy -Dartifact="$artifact" -DoutputDirectory="/tmp/lib/." -DremoteRepositories="$MAVEN_REPO"; \
+  done
+
+FROM openjdk:17-jdk-slim-bullseye
 
 # working directory for gatling
 WORKDIR /opt
 
 # gating version
-ENV GATLING_VERSION 3.2.1
+ENV GATLING_VERSION 3.10.4
+
 ENV APP_HOME  /opt/gatling
 ENV APP_USER  gatling
 ENV APP_GROUP appgroup
@@ -32,8 +46,7 @@ RUN set -x && mkdir -p gatling && \
   curl https://rclone.org/install.sh | bash && \
   addgroup --system ${APP_GROUP} && \
   adduser --system ${APP_USER} --ingroup ${APP_GROUP} --home ${APP_HOME} --no-create-home && \
-  chown -R ${APP_USER}:${APP_GROUP} ${APP_HOME} && \
-  chown -R ${APP_USER}:${APP_GROUP} /var/log/nginx /var/lib/nginx /usr/share/nginx
+  chown -R ${APP_USER}:${APP_GROUP} ${APP_HOME} /var/log/nginx /var/lib/nginx /usr/share/nginx
 
 USER gatling
 
@@ -47,6 +60,7 @@ VOLUME ["/opt/gatling/conf", "/opt/gatling/results", "/opt/gatling/user-files"]
 COPY user-files/simulations user-files/simulations
 COPY user-files/resources user-files/resources
 COPY conf conf
+COPY --from=dependency_stage /tmp/lib ${APP_HOME}/user-files/lib/
 
 # set environment variables
 ENV PATH /opt/gatling/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin

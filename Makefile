@@ -8,10 +8,10 @@ SAMPLE_IMG := gatling:$(IMAGE_TAG)
 # Release version
 VERSION := latest
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
-CRD_OPTIONS ?= "crd:trivialVersions=true,preserveUnknownFields=false"
+CRD_OPTIONS ?= "crd"
 KIND_CLUSTER_NAME ?= "gatling-cluster"
 K8S_NODE_IMAGE ?= v1.25.8
-KUSTOMIZE_VERSION ?= v5.0.1
+KUSTOMIZE_VERSION ?= v5.3.0
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
@@ -27,7 +27,8 @@ SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
 ENVTEST_ASSETS_DIR=$(shell pwd)/testbin
-KIND_CONFIG_DIR=$(shell pwd)/config/kind
+KIND_CLUSTER_CONFIG_DIR=$(shell pwd)/config/kind
+KUBECONFIG_BACKUP_DIR=$(shell pwd)/.kube
 
 all: build
 
@@ -47,12 +48,16 @@ all: build
 help: ## Display this help.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-kind-create: ## Create a kind cluster named ${KIND_CLUSTER_NAME} locally if necessary
+kind-create: ## Create a kind cluster named ${KIND_CLUSTER_NAME} locally if necessary and save the kubectl config.
 ifeq (1, $(shell kind get clusters | grep ${KIND_CLUSTER_NAME} | wc -l | tr -d ' '))
 	@echo "Cluster already exists"
 else
 	@echo "Creating Cluster"
-	kind create cluster --name ${KIND_CLUSTER_NAME} --image=kindest/node:${K8S_NODE_IMAGE} --config ${KIND_CONFIG_DIR}/cluster.yaml
+	kind create cluster --name ${KIND_CLUSTER_NAME} --image=kindest/node:${K8S_NODE_IMAGE} --config ${KIND_CLUSTER_CONFIG_DIR}/cluster.yaml
+ifeq ($(IN_DEV_CONTAINER), true)
+	@echo "kubeconfig backup =>"
+	mkdir -p ${KUBECONFIG_BACKUP_DIR} && kind get kubeconfig --name ${KIND_CLUSTER_NAME} > ${KUBECONFIG_BACKUP_DIR}/kind-conifg.yaml
+endif
 endif
 
 ##@ Development
@@ -135,7 +140,7 @@ LOCALBIN ?= $(shell pwd)/bin
 
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 controller-gen: ## Download controller-gen locally if necessary.
-	$(call go-get-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1)
+	$(call go-get-tool,$(CONTROLLER_GEN),sigs.k8s.io/controller-tools/cmd/controller-gen@v0.14.0)
 
 KUSTOMIZE_INSTALL_SCRIPT ?= "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
 .PHONY: kustomize
